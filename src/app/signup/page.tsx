@@ -1,37 +1,49 @@
 "use client"
-import React, {useRef} from 'react'
+import React, {useRef, useState} from 'react'
 import { useForm } from "react-hook-form";
+import { useRouter } from 'next/navigation'
+import {createUser} from "@/api/api";
 
 const Signup = () => {
+    const [serverErr, setServerErr] = useState('');
     const form = useRef(null);
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const router = useRouter()
 
-    const handleRegister =async (data)=>{
+    const handleRegister = async (data)=>{
         if (form.current) {
             try {
-                console.log(data);
+                const result = await createUser(data)
+                console.log(result)
+                router.push('/signin')
             } catch (err) {
-                console.log(err);
-                console.log(data);
+                setServerErr(err);
                 reset();
             }
         }
     }
-
   return (
     <div className='w-screen flex justify-center items-center'>
-
-        <form ref={form} onSubmit={handleSubmit(handleRegister)} className='flex flex-col gap-2 w-72 items-center p-8 rounded-lg shadow-lg mt-12'>
+        <form ref={form} onSubmit={handleSubmit(handleRegister)} className='form'>
             <h1 className='text-center text-xl font-bold'>Sign Up</h1>
-            <input type="text" {...register("fullName", {
+
+            {serverErr && <span className='err'>{serverErr}</span>}
+
+            {errors.name && <span className='err'>{errors.name.message}</span>}
+            <label>Full Name</label>
+            <input type="text" {...register("name", {
                 required: "Your Full Name is required",
                 minLength: {
                     value: 5,
                     message: "Your Full Name is too short",
                 },
-            })} name="fullName"
-                   id="fullName"
+            })} name="name"
+                   id="name"
                    placeholder="Your First and Last name" />
+
+
+            {errors.email && <span className='err'>{errors.email.message}</span>}
+            <label>Email</label>
             <input {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -47,6 +59,10 @@ const Signup = () => {
                    name="email"
                    id="email"
                    placeholder="Enter your email address" />
+
+
+            {errors.password && <span className='err'>{errors.password.message}</span>}
+            <label>Password</label>
             <input {...register("password", {
                 required: "Password is required",
                 minLength: {
@@ -60,13 +76,16 @@ const Signup = () => {
                    placeholder="************" />
 
 
+            <label>Role</label>
             <select {...register("role")}>
-                <option value="author">Author</option>
-                <option value="comentator">Comentator</option>
+                <option value='admin'>Author</option>
+                <option value="customer">Comentator</option>
             </select>
-
-            {errors.checkboxesRequired && <p style={{ color: 'red' }}>{errors.checkboxesRequired.message}</p>}
-
+            <label>Avatar</label>
+            <select {...register("avatar")}>
+                <option value='https://i.imgur.com/yhW6Yw1.jpg'>1</option>
+                <option value='https://i.imgur.com/yhW6Yw1.jpg'>2</option>
+            </select>
 
             <button className="signup-btn mt-5" type="submit">
                 Sign up

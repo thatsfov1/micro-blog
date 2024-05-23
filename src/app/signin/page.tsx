@@ -1,38 +1,48 @@
 "use client"
-import React, {useRef} from 'react'
+import React, {useRef, useState} from 'react'
 import {useForm} from "react-hook-form";
+import {loginUser} from "@/api/api";
+import {useRouter} from "next/navigation";
+import Link from "next/link";
 
 const Signin = () => {
-
+    const [serverErr, setServerErr] = useState('');
     const form = useRef(null)
     const {
         register,
-        formState: { errors },
+        formState: {errors},
         handleSubmit,
         reset,
     } = useForm();
 
+    const router = useRouter()
+
     const handleLogin = async (data) => {
         if (form.current) {
             try {
-                console.log(data)
+                const result = await loginUser(data)
+                localStorage.setItem('token', result.access_token)
+                router.push('/')
             } catch (err) {
-                console.log(err);
+                console.log(err)
+                setServerErr(err)
                 reset();
             }
         }
     };
     return (
         <div className='w-screen flex justify-center '>
-
             <form ref={form}
-                  onSubmit={handleSubmit(handleLogin)} className='flex flex-col gap-2 w-72 items-center p-8 rounded-lg shadow-lg mt-12'>
+                  onSubmit={handleSubmit(handleLogin)}
+                  className='form'>
                 <h1 className='text-center text-xl font-bold'>Sign In</h1>
+                {serverErr && <span className='err'>{serverErr}</span>}
                 {errors.email && (
-                    <div>
+                    <span className='err'>
                         {errors.email?.message}
-                    </div>
+                    </span>
                 )}
+                <label>Email</label>
                 <input
                     {...register("email", {
                         required: "Email is required",
@@ -51,10 +61,11 @@ const Signin = () => {
                 />
 
                 {errors.password && (
-                    <div>
+                    <span className='err'>
                         {errors.password?.message}
-                    </div>
+                    </span>
                 )}
+                <label>Password</label>
                 <input
                     {...register("password", {
                         required: "Password is required",
@@ -67,7 +78,10 @@ const Signin = () => {
                     name="password"
                     placeholder="************"
                 />
-                <button className="mt-5" type="submit">
+                <div>
+                    Dont have an account? <Link className='text-blue-500' href='/signup'>Create one</Link>
+                </div>
+                <button className="mt-5 w-full" type="submit">
                     Log in
                 </button>
             </form>
