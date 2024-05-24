@@ -2,6 +2,8 @@
 import React, {useEffect, useState} from 'react'
 import {getProfile, updateProfile} from "@/api/api";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {redirect} from "next/navigation";
+import Loader from "@/components/Loader";
 
 const SingleProfile = ({params}) => {
 
@@ -13,7 +15,9 @@ const SingleProfile = ({params}) => {
         queryFn: async () => await getProfile(token),
         queryKey: ["user"],
     });
-
+    if (!token) {
+        return redirect('/signin');
+    }
     const updateMutation = useMutation({
         mutationFn: async (updateData) => await updateProfile(user.id, updateData),
         onSuccess: () => {
@@ -69,7 +73,7 @@ const SingleProfile = ({params}) => {
 
 
     if (isLoading) {
-        return <div>loading...</div>
+        return <Loader/>
     }
 
     return (

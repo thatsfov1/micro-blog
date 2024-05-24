@@ -3,19 +3,23 @@ import Link from 'next/link'
 import {useBlogContext} from "@/api/context";
 import {useQuery} from "@tanstack/react-query";
 import {getProfile} from "@/api/api";
+import {useRouter} from "next/navigation";
 
 const Header = () => {
 
     const token = localStorage.getItem('token')
-    const { data:user, isLoading } = useQuery({
+    const { data:user } = useQuery({
         queryFn: async () => await getProfile(token),
         queryKey: ["user"],
     });
 
     const {dispatch} = useBlogContext()
+    const router = useRouter()
 
     const handleLogout = () =>{
         localStorage.clear()
+        router.push('/signin')
+
     }
 
   return (

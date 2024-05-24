@@ -6,6 +6,7 @@ import { useState} from "react";
 import Modal from "@/components/Modal";
 import {getProfile} from "@/api/api";
 import {useQuery} from "@tanstack/react-query";
+import Loader from "@/components/Loader";
 
 const Home = () => {
 
@@ -21,8 +22,8 @@ const Home = () => {
         queryKey: ["user"],
     });
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+    if (true) {
+        return <Loader/>;
     }
     return (
     <main className="">

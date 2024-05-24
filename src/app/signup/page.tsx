@@ -92,8 +92,10 @@ const Signup = () => {
             </select>
             <label>Avatar</label>
             <select {...register("avatar")}>
-                <option value='https://i.imgur.com/yhW6Yw1.jpg'>1</option>
-                <option value='https://i.imgur.com/yhW6Yw1.jpg'>2</option>
+                <option value='https://img.freepik.com/free-photo/close-up-portrait-good-looking-serious-african-man-with-healthy-clean-skin-wearing-white-casual-t-shirt-posing-isolated-against-gray-wall-with-copy-space-your-promotional-content_273609-6064.jpg'>
+                    Male</option>
+                <option value='https://i.imgur.com/yhW6Yw1.jpg'>Female</option>
+                <option value='https://masterpiecer-images.s3.yandex.net/0626fed86f6a11eeb060baea8797b5f2:upscaled'>Non binary</option>
             </select>
 
             <button className="signup-btn mt-5 btn" type="submit">
