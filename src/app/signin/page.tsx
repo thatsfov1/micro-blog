@@ -21,11 +21,10 @@ const Signin = () => {
         if (form.current) {
             try {
                 const result = await loginUser(data)
-                localStorage.setItem('token', result.access_token)
-                router.push('/')
+                    localStorage.setItem('token', result.access_token)
+                    router.push('/')
             } catch (err) {
-                console.log(err)
-                setServerErr(err)
+                setServerErr(err.message)
                 reset();
             }
         }
@@ -70,8 +69,12 @@ const Signin = () => {
                     {...register("password", {
                         required: "Password is required",
                         minLength: {
-                            value: 8,
+                            value: 4,
                             message: "Password is too short",
+                        },
+                        pattern: {
+                            value: /^[A-Za-z0-9]+$/,
+                            message: "Password should contain only numbers and letters",
                         },
                     })}
                     type={"password"}
@@ -81,7 +84,7 @@ const Signin = () => {
                 <div>
                     Dont have an account? <Link className='text-blue-500' href='/signup'>Create one</Link>
                 </div>
-                <button className="mt-5 w-full" type="submit">
+                <button className="mt-5 w-full btn" type="submit">
                     Log in
                 </button>
             </form>

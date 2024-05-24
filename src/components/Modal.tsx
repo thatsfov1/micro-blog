@@ -32,7 +32,7 @@ const Modal = ({active, setActive}:Props) => {
           <div className='modal-content' onClick={e => e.stopPropagation()}>
               {errMsg && <span className='err'>{errMsg}</span>}
               <textarea onChange={(e)=> setContent(e.target.value)} placeholder='Write something on your mind...'/>
-              <button onClick={createPost}>
+              <button className='btn' onClick={createPost}>
                   Create
               </button>
           </div>

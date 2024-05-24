@@ -2,7 +2,7 @@
 import React, {useRef, useState} from 'react'
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation'
-import {createUser} from "@/api/api";
+import {checkEmail, createUser} from "@/api/api";
 
 const Signup = () => {
     const [serverErr, setServerErr] = useState('');
@@ -13,11 +13,16 @@ const Signup = () => {
     const handleRegister = async (data)=>{
         if (form.current) {
             try {
-                const result = await createUser(data)
-                console.log(result)
-                router.push('/signin')
+                // const isAvailable = await checkEmail(data?.email)
+                // if(isAvailable){
+                    const result = await createUser(data)
+                    console.log(result)
+                    router.push('/signin')
+                // }else{
+                //     setServerErr("This email already in usage")
+                // }
             } catch (err) {
-                setServerErr(err);
+                setServerErr(err.message);
                 reset();
             }
         }
@@ -66,8 +71,12 @@ const Signup = () => {
             <input {...register("password", {
                 required: "Password is required",
                 minLength: {
-                    value: 8,
+                    value: 4,
                     message: "Password is too short",
+                },
+                pattern: {
+                    value: /^[A-Za-z0-9]+$/,
+                    message: "Password should contain only numbers and letters",
                 },
             })}
                    type={"password"}

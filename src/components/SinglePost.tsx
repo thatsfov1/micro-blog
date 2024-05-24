@@ -1,13 +1,20 @@
 import React, {useState} from 'react'
 import {Post} from "@/types/types";
 import {useBlogContext} from "@/api/context";
+import {useQuery} from "@tanstack/react-query";
+import {getProfile} from "@/api/api";
 
 const SinglePost = ({post}: { post: Post }) => {
-    const user = JSON.parse(localStorage.getItem('user'))
+
     const [commentQuery, setCommentQuery] = useState('');
     const [comment, setComment] = useState(false);
+    const token = localStorage.getItem('token')
+    const { dispatch} = useBlogContext()
 
-    const {dispatch} = useBlogContext()
+    const { data:user } = useQuery({
+        queryFn: async () => await getProfile(token),
+        queryKey: ["user"],
+    });
 
     const createComment = () => {
         dispatch({
@@ -26,7 +33,7 @@ const SinglePost = ({post}: { post: Post }) => {
             <div className='p-2 text-slate-500'>{post.author}</div>
             <p>{post.content}</p>
             {user?.role === "customer" && (
-                <div onClick={() => setComment(!comment)} className='text-blue-500 cursor-pointer'>
+                <div onClick={() => setComment(!comment)} className='ml-2 text-blue-500 cursor-pointer'>
                     Comment...
                 </div>
             )}
@@ -44,7 +51,7 @@ const SinglePost = ({post}: { post: Post }) => {
                     <div className='flex flex-col gap-2'>
                         <textarea value={commentQuery} onChange={(e) => setCommentQuery(e.target.value)}
                                   placeholder='Comment this post'/>
-                        <button onClick={createComment}>Comment</button>
+                        <button className='btn' onClick={createComment}>Comment</button>
                     </div>
 
                 </div>
