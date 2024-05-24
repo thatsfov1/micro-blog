@@ -21,8 +21,6 @@ export interface User{
 
 export type State = {
     posts: Post[]
-    users:User[]
-    user:User | null
 }
 
 

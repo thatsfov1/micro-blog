@@ -2,11 +2,6 @@ import {Action, State} from "@/types/types";
 
 const blogReducer = (state: State, action: Action): State => {
     switch (action.type) {
-        case "SET_USER": {
-            return {
-                ...state, user: action.payload
-            }
-        }
         case "CREATE_POST": {
             return {
                 ...state, posts: [...state.posts, action.payload]

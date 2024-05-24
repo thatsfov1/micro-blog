@@ -96,7 +96,7 @@ const Signup = () => {
                 <option value='https://i.imgur.com/yhW6Yw1.jpg'>2</option>
             </select>
 
-            <button className="signup-btn mt-5" type="submit">
+            <button className="signup-btn mt-5 btn" type="submit">
                 Sign up
             </button>
         </form>

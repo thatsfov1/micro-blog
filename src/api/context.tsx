@@ -1,6 +1,6 @@
 "use client"
 import {createContext, Dispatch, ReactNode, useContext, useReducer} from 'react'
-import {posts,users} from "./data";
+import {posts} from "./data";
 import {Action, State} from "@/types/types";
 import blogReducer from "./blogReducer";
 
@@ -27,8 +27,6 @@ const ContextProvider = ({children}: BlogProviderProps) => {
 
     const [state, dispatch] = useReducer(blogReducer, {
         posts:posts,
-        users:users,
-        user:null
     })
     return (
         <BlogContext.Provider value={{state, dispatch}}>

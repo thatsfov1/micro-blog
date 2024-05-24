@@ -1,18 +1,25 @@
 "use client"
 import React, {useEffect, useState} from 'react'
 import {getProfile, updateProfile} from "@/api/api";
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 
 const SingleProfile = ({params}) => {
 
     const [inputActive, setInputActive] = useState(false);
     const [inputQuery, setInputQuery] = useState(null);
+    const queryClient = useQueryClient();
     const token = localStorage.getItem('token')
     const { data:user, isLoading } = useQuery({
         queryFn: async () => await getProfile(token),
         queryKey: ["user"],
     });
 
+    const updateMutation = useMutation({
+        mutationFn: async (updateData) => await updateProfile(user.id, updateData),
+        onSuccess: () => {
+            queryClient.invalidateQueries(["user"]);
+        },
+    });
 
     const changeName = async () => {
         setInputActive(true)
@@ -21,7 +28,7 @@ const SingleProfile = ({params}) => {
     const onSelectPhoto = async (e) => {
         if (e.target.files.length) {
             try {
-                await updateProfile(user.id, {avatar:e.target.files[0]})
+                updateMutation.mutate({ name: inputQuery });
             }catch (err) {
                 console.log(err.message)
             }
@@ -32,7 +39,7 @@ const SingleProfile = ({params}) => {
     const handleKeyPress = async (e) => {
         if (e.key === 'Enter') {
             try {
-                await updateProfile(user.id, {name:inputQuery})
+                updateMutation.mutate({ name: inputQuery });
                 setInputActive(false)
             } catch (err) {
                 console.log(err.message)
@@ -49,7 +56,7 @@ const SingleProfile = ({params}) => {
             changeValue = 'customer'
         }
         try {
-            await updateProfile(user.id, {role: changeValue})
+            updateMutation.mutate({ role: changeValue });
         }catch (err){
             console.log(err.message)
         }
