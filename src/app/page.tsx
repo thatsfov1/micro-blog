@@ -22,7 +22,7 @@ const Home = () => {
         queryKey: ["user"],
     });
 
-    if (true) {
+    if (isLoading) {
         return <Loader/>;
     }
     return (
